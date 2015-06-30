@@ -183,16 +183,14 @@
     $(tile).removeClass("marker");
     if ($(tile).hasClass("question")) { $(tile).html(""); };
     $(tile).removeClass("question");
-    if ( $(tile).data("mine") == "true" ) {
-      console.log("clicked a mine");
-      end_game();
-    } else {
+    if ( $(tile).data("mine") == "true" ) { end_game(); }
+    else {
       var neighbors = get_neighbors(tile);
       var mine_count = neighboring_mines(neighbors);
       if ( mine_count > 0 ) { $(tile).html( mine_count ); }
       else { $.each(neighbors, function(index,value) { uncover(get_tile(value[0],value[1])); }); };
+      check_win();
     };
-    check_win();
   };
 
   function surrounding(tile) {
@@ -248,19 +246,18 @@
   function check_win() {
     if ( game != "running" ) { return };
     if ( $(".unclicked").length > mines ) { return; };
-    console.log("you win")
     end_game();    
     alert("You win!");
   };
 
   function end_game() {
+    if ( game != "running" ) { return };
     $(".tile").each( function() {
       if ( $(this).data("mine") == "true" ) { 
         $(this).addClass("mine");
         $(this).append("X");
       }
     });
-    console.log("game over")
     stop_timer();
     game = "over";
     $("#board").addClass("disabled");
@@ -272,7 +269,4 @@ $("#board").on("mouseout", ".tile", function() { $(this).removeClass('marker'); 
 $( window ).load(function() {
    $("#new").trigger("click");
 });
-
 </script>
-
-
